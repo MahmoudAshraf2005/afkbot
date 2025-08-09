@@ -6,7 +6,7 @@
   },
 
   "server": {
-    "ip": "dankcube.duckdns.org", 
+    "ip": "dankcube.duckdns.or", 
     "port": 8973,   
     "version": "1.12.1"   
   },
