@@ -1,6 +1,6 @@
 {
   "bot-account": {
-    "username": "DankbotP2NEW", 
+    "username": "Dankboty", 
     "password": "",
     "type": "mojang"
   },
@@ -34,7 +34,10 @@
       "repeat": true,
       "repeat-delay": 60,
 
-      "messages": []
+      "messages": [
+        "/register dankbot123",
+        "/register dankbot123"
+      ]
     },
 
     "chat-log": true,
