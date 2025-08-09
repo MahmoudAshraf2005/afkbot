@@ -6,8 +6,8 @@
   },
 
   "server": {
-    "ip": "fi-01.freezehost.pro:8973", 
-    "port": 39058,   
+    "ip": "dankcube.duckdns.org:8973", 
+    "port": 8973,   
     "version": "1.12.1"   
   },
   
