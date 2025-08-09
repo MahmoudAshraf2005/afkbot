@@ -18,7 +18,7 @@ app.listen(8000, () => {
 
 function createBot() {
    const bot = mineflayer.createBot({
-      username: `${config['bot-account']['username']}_${Math.floor(Math.random() * 1000)}`, // اسم عشوائي
+      username: config['bot-account']['username'],
       password: config['bot-account']['password'],
       auth: config['bot-account']['type'],
       host: config.server.ip,
@@ -39,13 +39,15 @@ function createBot() {
          console.log(`[Auth] Sent /register command.`);
 
          bot.once('chat', (username, message) => {
-            console.log(`[ChatLog] <${username}> ${message}`);
+            console.log(`[ChatLog] <${username}> ${message}`); // Log all chat messages
+
+            // Check for various possible responses
             if (message.includes('successfully registered')) {
                console.log('[INFO] Registration confirmed.');
                resolve();
             } else if (message.includes('already registered')) {
                console.log('[INFO] Bot was already registered.');
-               resolve();
+               resolve(); // Resolve if already registered
             } else if (message.includes('Invalid command')) {
                reject(`Registration failed: Invalid command. Message: "${message}"`);
             } else {
@@ -61,7 +63,8 @@ function createBot() {
          console.log(`[Auth] Sent /login command.`);
 
          bot.once('chat', (username, message) => {
-            console.log(`[ChatLog] <${username}> ${message}`);
+            console.log(`[ChatLog] <${username}> ${message}`); // Log all chat messages
+
             if (message.includes('successfully logged in')) {
                console.log('[INFO] Login successful.');
                resolve();
@@ -81,7 +84,9 @@ function createBot() {
 
       if (config.utils['auto-auth'].enabled) {
          console.log('[INFO] Started auto-auth module');
+
          const password = config.utils['auto-auth'].password;
+
          pendingPromise = pendingPromise
             .then(() => sendRegister(password))
             .then(() => sendLogin(password))
@@ -95,9 +100,15 @@ function createBot() {
          if (config.utils['chat-messages'].repeat) {
             const delay = config.utils['chat-messages']['repeat-delay'];
             let i = 0;
-            setInterval(() => {
+
+            let msg_timer = setInterval(() => {
                bot.chat(`${messages[i]}`);
-               i = (i + 1) % messages.length;
+
+               if (i + 1 === messages.length) {
+                  i = 0;
+               } else {
+                  i++;
+               }
             }, delay * 1000);
          } else {
             messages.forEach((msg) => {
@@ -107,9 +118,10 @@ function createBot() {
       }
 
       const pos = config.position;
+
       if (config.position.enabled) {
          console.log(
-            `\x1b[32m[Afk Bot] Moving to (${pos.x}, ${pos.y}, ${pos.z})\x1b[0m`
+            `\x1b[32m[Afk Bot] Starting to move to target location (${pos.x}, ${pos.y}, ${pos.z})\x1b[0m`
          );
          bot.pathfinder.setMovements(defaultMove);
          bot.pathfinder.setGoal(new GoalBlock(pos.x, pos.y, pos.z));
@@ -125,35 +137,32 @@ function createBot() {
 
    bot.on('goal_reached', () => {
       console.log(
-         `\x1b[32m[AfkBot] Arrived at target. ${bot.entity.position}\x1b[0m`
+         `\x1b[32m[AfkBot] Bot arrived at the target location. ${bot.entity.position}\x1b[0m`
       );
    });
 
    bot.on('death', () => {
       console.log(
-         `\x1b[33m[AfkBot] Bot died and respawned at ${bot.entity.position}`,
+         `\x1b[33m[AfkBot] Bot has died and was respawned at ${bot.entity.position}`,
          '\x1b[0m'
       );
    });
 
-   bot.on('end', () => {
-      console.log("[INFO] Bot disconnected. Waiting before reconnect...");
-      setTimeout(() => {
-         createBot();
-      }, config.utils['auto-recconect-delay'] || 5000);
-   });
+   if (config.utils['auto-reconnect']) {
+      bot.on('end', () => {
+         setTimeout(() => {
+            createBot();
+         }, config.utils['auto-recconect-delay']);
+      });
+   }
 
-   bot.on('kicked', (reason) => {
+   bot.on('kicked', (reason) =>
       console.log(
          '\x1b[33m',
          `[AfkBot] Bot was kicked from the server. Reason: \n${reason}`,
          '\x1b[0m'
-      );
-      console.log("[INFO] Waiting 5 seconds before reconnect...");
-      setTimeout(() => {
-         createBot();
-      }, 5000);
-   });
+      )
+   );
 
    bot.on('error', (err) =>
       console.log(`\x1b[31m[ERROR] ${err.message}`, '\x1b[0m')

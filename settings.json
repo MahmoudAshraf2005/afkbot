@@ -1,6 +1,6 @@
 {
   "bot-account": {
-    "username": "DankPlayer", 
+    "username": "Dankbot", 
     "password": "",
     "type": "mojang"
   },
@@ -35,6 +35,7 @@
       "repeat-delay": 60,
 
       "messages": [
+        "/register dankbot123",
         "/login dankbot123"
       ]
     },
