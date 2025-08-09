@@ -6,7 +6,7 @@
   },
 
   "server": {
-    "ip": "dankcube.falixsrv.me", 
+    "ip": "dankcube.duckdns.org:8973", 
     "port": 39058,   
     "version": "1.12.1"   
   },
