@@ -1,12 +1,12 @@
 {
   "bot-account": {
-    "username": "Dankbot", 
+    "username": "DankbotP2", 
     "password": "",
     "type": "mojang"
   },
 
   "server": {
-    "ip": "dankcube.duckdns.or", 
+    "ip": "fi-01.freezehost.pro", 
     "port": 8973,   
     "version": "1.12.1"   
   },
@@ -35,8 +35,7 @@
       "repeat-delay": 60,
 
       "messages": [
-        "/register dankbot123",
-        "/login dankbot123"
+        "/register dankbot123"
       ]
     },
 
